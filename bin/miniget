@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var program = require('commander')
+  //, miniget = require('../index')
+
+program
+  .version('0.0.0')
+  .option('-o, --out <path>', 'specify output directory')
+  
+//   .usage('[options] [dir|file|namespace ...]')
+//   .option('-h, --hook <path>', 'specify event hook source path')
+//   .option('-o, --out <path>', 'excute writeFile to path')
+//   .option('-n, --namespace <namespace>', 'add namespace')
+//   .option('-N, --no-src', 'excute with no hook including default hook')
+//   .option('-v, --verbose', 'verbose logging')
+// ;
+process.argv.forEach(function (arg) {
+  console.log('arg : ' + arg);
+  
+})
+program.parse(process.argv);
