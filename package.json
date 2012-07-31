@@ -18,7 +18,8 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "expect.js": "*"
+    "expect.js": "*",
+    "express": "express-3.0.0rc1"
   },
   "keywords": [
     "wget",
