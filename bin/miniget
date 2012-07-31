@@ -1,21 +1,38 @@
 #!/usr/bin/env node
 
 var program = require('commander')
-  //, miniget = require('../index')
+  , miniget = require('../');
 
 program
-  .version('0.0.0')
+  .version(miniget.version)
+  .usage('[options] [filenames]')
   .option('-o, --out <path>', 'specify output directory')
-  
-//   .usage('[options] [dir|file|namespace ...]')
-//   .option('-h, --hook <path>', 'specify event hook source path')
-//   .option('-o, --out <path>', 'excute writeFile to path')
-//   .option('-n, --namespace <namespace>', 'add namespace')
-//   .option('-N, --no-src', 'excute with no hook including default hook')
-//   .option('-v, --verbose', 'verbose logging')
-// ;
-process.argv.forEach(function (arg) {
-  console.log('arg : ' + arg);
-  
-})
-program.parse(process.argv);
+  .option('-p, --port <number>', 'specify request port. Default 3000')
+  .option('-h, --host <address>', 'specify a host. Default localhost')
+  .parse(process.argv);
+
+var filepaths = program.args;
+if (!filepaths.length) {
+  console.error(program.helpInformation());
+  program.emit('--help');
+  process.exit(0);
+}
+
+if (!program.out) {
+  console.error('--out is required');
+  process.exit(1);
+}
+
+var mg = miniget();
+mg.out(program.out);
+if (program.port) mg.port(program.port);
+if (program.host) mg.host(program.host);
+
+mg.exec(filepaths, function (err, filenames) {
+  if (err) {
+    console.error(err.stack);
+    process.exit(1);
+  }
+  console.error('wrote ' + filenames.length + ' file');
+  process.exit(0);
+});
