@@ -54,9 +54,21 @@ describe('miniget().exec(files, done)', function () {
     })
   })
 
-  // describe('with .src()', function () {
-    // it('should resolve path relative to src', function (done) {
-    //   var files = ['fixtures/index.html', 'fixtures/index2.html', 'fi']
-    // })
-  // })
+  describe('with .src()', function () {
+    it('should resolve path relative to src', function (done) {
+      var files =
+      [ 'fixtures/index.html'
+      , 'fixtures/index2.html'
+      , 'fixtures/index3.html'];
+  
+      miniget()
+      .port(3001)
+      .out('/tmp/miniget-test')
+      .src('fixtures')
+      .exec(files, function (err) {
+        expect(err).not.be.ok()
+        examine(['index.html', 'index2.html', 'index3.html'], done)
+      })
+    })
+  })
 })
