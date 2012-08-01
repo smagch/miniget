@@ -5,10 +5,7 @@ var expect = require('expect.js')
   , path = require('path')
   , fs = require('fs')
   , async = require('async')
-
-var app = express()
-app.use(express.static(path.resolve(__dirname, 'fixtures')));
-http.createServer(app).listen(3001, function () {
+  , exec = require('child_process').exec
 
 describe('miniget().exec(files, done)', function () {
   function examine(files, done) {
@@ -22,6 +19,16 @@ describe('miniget().exec(files, done)', function () {
     }, done)
   }
 
+  before(function (done) {
+    var app = express()
+    app.use(express.static(path.resolve(__dirname, 'fixtures')));
+    http.createServer(app).listen(3001, done)
+  })
+
+  afterEach(function (done) {
+    exec('rm -rf /tmp/miniget-test', done)
+  })
+
   it('should get index.html', function (done) {
     var files = ['index.html', 'index2.html', 'index3.html'];
     miniget()
@@ -33,18 +40,23 @@ describe('miniget().exec(files, done)', function () {
     })
   })
 
-  it('should transform extname', function (done) {
-    var files = ['index.jade', 'index2.jade', 'index3.jade'];
-    miniget()
-    .port(3001)
-    .out('/tmp/miniget-test2')
-    .ext('.jade=.html')
-    .exec(files, function (err) {
-      expect(err).not.be.ok()
-      examine(['index.html', 'index2.html', 'index3.html'], done)
+  describe('with .ext()', function () {
+    it('should transform extname', function (done) {
+      var files = ['index.jade', 'index2.jade', 'index3.jade'];
+      miniget()
+      .port(3001)
+      .out('/tmp/miniget-test')
+      .ext('.jade=.html')
+      .exec(files, function (err) {
+        expect(err).not.be.ok()
+        examine(['index.html', 'index2.html', 'index3.html'], done)
+      })
     })
   })
-})
 
+  // describe('with .src()', function () {
+    // it('should resolve path relative to src', function (done) {
+    //   var files = ['fixtures/index.html', 'fixtures/index2.html', 'fi']
+    // })
+  // })
 })
-
