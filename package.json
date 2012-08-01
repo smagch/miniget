@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git://github.com/smagch/miniget.git"
   },
+  "bin": {
+    "miniget": "./bin/miniget"
+  },
   "dependencies": {
     "async": "~0.1",
     "mkdirp": "~0.3",
@@ -19,7 +22,7 @@
   "devDependencies": {
     "mocha": "*",
     "expect.js": "*",
-    "express": "express-3.0.0rc1"
+    "express": "3.0.0rc1"
   },
   "keywords": [
     "wget",
