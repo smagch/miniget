@@ -70,5 +70,22 @@ describe('miniget().exec(files, done)', function () {
         examine(['index.html', 'index2.html', 'index3.html'], done)
       })
     })
+
+    it('should resolve path relative to src absolute', function (done) {
+      var files =
+      [ __dirname + '/fixtures/index.html'
+      , __dirname + '/fixtures/index2.html'
+      , __dirname + '/fixtures/index3.html'
+      ];
+
+      miniget()
+      .port(3001)
+      .out('/tmp/miniget-test')
+      .src(__dirname + '/fixtures')
+      .exec(files, function (err) {
+        expect(err).not.be.ok()
+        examine(['index.html', 'index2.html', 'index3.html'], done)
+      })
+    })
   })
 })
