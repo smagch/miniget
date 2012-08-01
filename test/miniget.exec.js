@@ -11,6 +11,17 @@ app.use(express.static(path.resolve(__dirname, 'fixtures')));
 http.createServer(app).listen(3001, function () {
 
 describe('miniget().exec(files, done)', function () {
+  function examine(files, done) {
+    async.map(files, function (filename, next) {
+      var destPath = path.resolve('/tmp/miniget-test', filename)
+      expect(fs.existsSync(destPath)).to.be.ok()
+      var src = fs.readFileSync(path.resolve(__dirname, 'fixtures', filename))
+        , copy = fs.readFileSync(destPath)
+      expect(src).to.eql(copy)
+      next()
+    }, done)
+  }
+
   it('should get index.html', function (done) {
     var files = ['index.html', 'index2.html', 'index3.html'];
     miniget()
@@ -18,14 +29,19 @@ describe('miniget().exec(files, done)', function () {
     .out('/tmp/miniget-test')
     .exec(files, function (err) {
       expect(err).not.be.ok()
-      async.map(files, function (filename, next) {
-        var destPath = path.resolve('/tmp/miniget-test', filename)
-        expect(fs.existsSync(destPath)).to.be.ok()
-        var src = fs.readFileSync(path.resolve(__dirname, 'fixtures', filename))
-          , copy = fs.readFileSync(destPath)
-        expect(src).to.eql(copy)
-        next()
-      }, done)
+      examine(files, done)
+    })
+  })
+
+  it('should transform extname', function (done) {
+    var files = ['index.jade', 'index2.jade', 'index3.jade'];
+    miniget()
+    .port(3001)
+    .out('/tmp/miniget-test2')
+    .ext('.jade=.html')
+    .exec(files, function (err) {
+      expect(err).not.be.ok()
+      examine(['index.html', 'index2.html', 'index3.html'], done)
     })
   })
 })
