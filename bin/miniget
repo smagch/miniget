@@ -9,6 +9,8 @@ program
   .option('-o, --out <path>', 'specify output directory')
   .option('-p, --port <number>', 'specify request port. Default 3000')
   .option('-h, --host <address>', 'specify a host. Default localhost')
+  .option('-e, --ext <map>', 'resolve extension name')
+  .option('-s, --src <path>', 'specify source directory')
   .parse(process.argv);
 
 var filepaths = program.args;
@@ -24,9 +26,17 @@ if (!program.out) {
 }
 
 var mg = miniget();
-mg.out(program.out);
-if (program.port) mg.port(program.port);
-if (program.host) mg.host(program.host);
+
+/**
+ * set options if it's specified
+ *
+ * if (program.port) mg.port(program.port);
+ * if (program.host) mg.host(program.host); etc...
+ */
+
+Object.keys(miniget.defaults).forEach(function (key) {
+  if (program[key]) mg[key](program[key]);
+});
 
 mg.exec(filepaths, function (err, filenames) {
   if (err) {
