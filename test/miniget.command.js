@@ -12,7 +12,6 @@ describe('command line', function () {
   before(function (done) {
     var app = express()
     app.get('/hoge/*.html', function (req, res) {
-      console.log(req.url)
       res.send(req.url)
     })
 
@@ -47,5 +46,5 @@ describe('command line', function () {
       if (err) return done(err)
       examine(urls, done)
     })
- })
+  })
 })
