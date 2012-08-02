@@ -29,14 +29,30 @@ describe('miniget().exec(files, done)', function () {
     exec('rm -rf /tmp/miniget-test', done)
   })
 
-  it('should get index.html', function (done) {
+  describe('basic', function () {
     var files = ['index.html', 'index2.html', 'index3.html'];
-    miniget()
-    .port(3001)
-    .out('/tmp/miniget-test')
-    .exec(files, function (err) {
-      expect(err).not.be.ok()
-      examine(files, done)
+    it('should get index{1,2,3}.html', function (done) {
+      miniget()
+      .port(3001)
+      .out('/tmp/miniget-test')
+      .exec(files, function (err) {
+        expect(err).not.be.ok()
+        examine(files, done)
+      })
+    })
+
+    it('should get /index{1,2,3}.html', function (done) {
+      var filesWithSep = files.map(function (filename) {
+        return '/' + filename;
+      });
+
+      miniget(filesWithSep)
+      .port(3001)
+      .out('/tmp/miniget-test')
+      .exec(files, function (err) {
+        expect(err).not.be.ok()
+        examine(files, done)
+      })
     })
   })
 
