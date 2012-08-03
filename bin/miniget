@@ -9,6 +9,7 @@ program
   .option('-o, --out <path>', 'specify output directory')
   .option('-p, --port <number>', 'specify request port. Default 3000')
   .option('-h, --host <address>', 'specify a host. Default localhost')
+  .option('-H, --head', 'make HEAD requests instead of GET')
   .option('-e, --ext <map>', 'resolve extension name')
   .option('-s, --src <path>', 'specify source directory')
   .parse(process.argv);
@@ -43,6 +44,7 @@ mg.exec(filepaths, function (err, filenames) {
     console.error(err.stack);
     process.exit(1);
   }
-  console.error('wrote ' + filenames.length + ' file');
+  // TODO output color message
+  // console.error('wrote ' + filenames.length + ' file');
   process.exit(0);
 });

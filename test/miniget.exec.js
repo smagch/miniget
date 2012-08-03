@@ -54,6 +54,20 @@ describe('miniget().exec(files, done)', function () {
         examine(files, done)
       })
     })
+
+    it('should perform head request', function (done) {
+      miniget()
+      .port(3001)
+      .head(true)
+      .exec(files, function (err, results) {
+        expect(err).not.be.ok()
+        expect(results).to.be.an('array')
+        results.forEach(function (code) {
+          expect(code).to.eql(200)
+        })
+        done()
+      })
+    })
   })
 
   describe('with .ext()', function () {
@@ -76,7 +90,7 @@ describe('miniget().exec(files, done)', function () {
       [ 'fixtures/index.html'
       , 'fixtures/index2.html'
       , 'fixtures/index3.html'];
-  
+
       miniget()
       .port(3001)
       .out('/tmp/miniget-test')

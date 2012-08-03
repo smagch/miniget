@@ -32,10 +32,11 @@ describe('command line', function () {
     }, done)
   }
 
-  var command = miniget + ' --out /tmp/miniget-test-fail --port 3020 ';
+  
 
   it('should success', function (done) {
-    var urls = [];
+    var command = miniget + ' --out /tmp/miniget-test-fail --port 3020 '
+      , urls = [];
     for (var i = 0; i < 10; i++) {
       urls.push('hoge/' + Math.random() + '.html');
     }
@@ -46,5 +47,18 @@ describe('command line', function () {
       if (err) return done(err)
       examine(urls, done)
     })
+  })
+
+  it('should success with head option', function (done) {
+    var command = miniget + ' --out /tmp/miniget-test-fail --port 3020 --head '
+      , urls = [];
+
+    for (var i = 0; i < 10; i++) {
+      urls.push('hoge/' + Math.random() + '.html');
+    }
+
+    async.forEach(urls, function (url, fn) {
+      exec(command + url, fn)
+    }, done)
   })
 })
