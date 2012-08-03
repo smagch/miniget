@@ -19,46 +19,70 @@ describe('command line', function () {
   })
 
   afterEach(function (done) {
-    exec('rm -rf /tmp/miniget-test-fail', done)
+    exec('rm -rf /tmp/miniget-test-command', done)
   })
 
   function examine(urls, done) {
     async.map(urls, function (url, fn) {
-      fs.readFile('/tmp/miniget-test-fail/' + url, function (err, data) {
+      var _url = path.normalize('/tmp/miniget-test-command/' + url)
+      fs.readFile(_url, function (err, data) {
         if (err) return fn(err)
-        expect('/' + url).to.eql(data.toString())
+        expect(path.normalize('/' + url)).to.eql(data.toString())
         fn()
       })
     }, done)
   }
 
-  
+  it('should success with one request', function (done) {
+    var command = miniget + ' --out /tmp/miniget-test-command --port 3020 '
+      , url = 'hoge/foo.html';
 
-  it('should success', function (done) {
-    var command = miniget + ' --out /tmp/miniget-test-fail --port 3020 '
+    command += url;
+    exec(command, function (err) {
+      if (err) return done(err)
+      examine([url], done)
+    })
+  })
+
+  it('should success with multiple targets', function (done) {
+    var command = miniget + ' --out /tmp/miniget-test-command --port 3020 '
       , urls = [];
-    for (var i = 0; i < 10; i++) {
+
+    for (var i = 0; i < 30; i++) {
       urls.push('hoge/' + Math.random() + '.html');
     }
 
-    async.forEach(urls, function (url, fn) {
-      exec(command + url, fn)
-    }, function (err) {
+    command += urls.join(' ');
+    exec(command, function (err) {
+      if (err) return done(err)
+      examine(urls, done)
+    })
+  })
+
+  it('should success when arg start from /', function (done) {
+    var command = miniget + ' --out /tmp/miniget-test-command --port 3020 '
+      , urls = [];
+
+    for (var i = 0; i < 30; i++) {
+      urls.push('/hoge/' + Math.random() + '.html');
+    }
+
+    command += urls.join(' ');
+    exec(command, function (err) {
       if (err) return done(err)
       examine(urls, done)
     })
   })
 
   it('should success with head option', function (done) {
-    var command = miniget + ' --out /tmp/miniget-test-fail --port 3020 --head '
+    var command = miniget + ' --out /tmp/miniget-test-command --port 3020 --head '
       , urls = [];
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 30; i++) {
       urls.push('hoge/' + Math.random() + '.html');
     }
 
-    async.forEach(urls, function (url, fn) {
-      exec(command + url, fn)
-    }, done)
+    command += urls.join(' ')
+    exec(command, done)
   })
 })
