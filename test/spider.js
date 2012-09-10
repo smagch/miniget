@@ -5,9 +5,10 @@ var spider = require('../lib/spider')
   , expect = require('expect.js')
 
 describe('spider', function () {
-  var server;
+  
 
   describe('(path)', function () {
+    var server;
     before(function (done) {
       var app = express();
       app.use(express.static(path.resolve(__dirname, 'fixtures2')));
@@ -45,6 +46,7 @@ describe('spider', function () {
   })
 
   describe('(options)', function () {
+    var server;
     before(function (done) {
       var app = express();
       app.use(express.static(path.resolve(__dirname, 'fixtures2')));

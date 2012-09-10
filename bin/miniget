@@ -23,11 +23,6 @@ if (!filepaths.length) {
   process.exit(0);
 }
 
-if (!program.out) {
-  console.error('--out is required');
-  process.exit(1);
-}
-
 var mg = miniget();
 
 /**
@@ -44,12 +39,10 @@ Object.keys(miniget.defaults).forEach(function (key) {
 // TODO perform head first and then if no err, exec
 mg.exec(filepaths, function (err, filenames) {
   if (err) {
-    // TODO `err.stack` for unknown error
     logger.error(err.message);
+    // logger.error(err.stack);
     process.exit(1);
   }
 
-  // TODO output color message
-  // console.error('wrote ' + filenames.length + ' file');
   process.exit(0);
 });

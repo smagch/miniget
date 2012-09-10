@@ -18,8 +18,8 @@
     "mkdirp": "~0.3",
     "debug": "~0.7",
     "commander": "~1.0",
-    "ansi": "0.1",
-    "cheerio": "~0.9"
+    "cheerio": "~0.9",
+    "npmlog": "*"
   },
   "devDependencies": {
     "mocha": "*",
