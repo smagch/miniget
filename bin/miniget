@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander')
+  , logger = require('../lib/logger')
   , miniget = require('../');
 
 program
@@ -9,7 +10,8 @@ program
   .option('-o, --out <path>', 'specify output directory')
   .option('-p, --port <number>', 'specify request port. Default 3000')
   .option('-h, --host <address>', 'specify a host. Default localhost')
-  .option('-H, --head', 'make HEAD requests instead of GET')
+  .option('-r, --recursive', 'parse html and get recursively')
+  .option('-H, --head', 'make HEAD requests instead of GET to see if response get status 200')
   .option('-e, --ext <map>', 'resolve extension name')
   .option('-s, --src <path>', 'specify source directory')
   .parse(process.argv);
@@ -39,11 +41,14 @@ Object.keys(miniget.defaults).forEach(function (key) {
   if (program[key]) mg[key](program[key]);
 });
 
+// TODO perform head first and then if no err, exec
 mg.exec(filepaths, function (err, filenames) {
   if (err) {
-    console.error(err.stack);
+    // TODO `err.stack` for unknown error
+    logger.error(err.message);
     process.exit(1);
   }
+
   // TODO output color message
   // console.error('wrote ' + filenames.length + ' file');
   process.exit(0);
